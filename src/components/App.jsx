@@ -1,76 +1,49 @@
 import React, { Component } from 'react';
-import { UsersList } from './UsersList/UsersList';
-import { Section } from './Section/Section';
-import { data } from '../data/users';
-import { Button } from './Button/Button';
-import { AddForm } from './AddForm/AddForm';
-import { nanoid } from 'nanoid';
+
+import movies from '../data/movies.json';
+import { MoviesGallery } from './MoviesGallery/MoviesGallery';
+// import { nanoid } from 'nanoid';
+// import { Modal } from './Modal/Modal';
+
+const MOVIES_KEY = 'MOVIES_KEY';
 
 export class App extends Component {
   state = {
-    users: data,
-    isFormShown: false,
+    movies: movies,
+    currentImg: null,
   };
 
-  deleteUser = userId => {
+  componentDidMount() {
+    const localData = localStorage.getItem(MOVIES_KEY);
+    if (localData) {
+      this.setState({ movies: JSON.parse(localData) });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.movies !== this.state.movies) {
+      localStorage.setItem(MOVIES_KEY, JSON.stringify(this.state.movies));
+    }
+  }
+
+  deleteMovie = id => {
     this.setState(prevState => {
-      return {
-        users: prevState.users.filter(user => user.id !== userId),
-      };
+      return { movies: prevState.movies.filter(movie => movie.id !== id) };
     });
   };
 
-  changeStatus = userId => {
-    this.setState(prevState => {
-      return {
-        users: prevState.users.map(user => {
-          if (user.id === userId) {
-            return { ...user, hasJob: !user.hasJob };
-          } else {
-            return user;
-          }
-        }),
-      };
-    });
-  };
-
-  openForm = () => {
-    this.setState({ isFormShown: true });
-  };
-
-  closeForm = () => {
-    this.setState({ isFormShown: false });
-  };
-
-  addUser = data => {
-    const newUser = {
-      id: nanoid(),
-      hasJob: false,
-      ...data,
-    };
-    this.setState(prevState => {
-      return {
-        users: [...prevState.users, newUser],
-      };
-    });
+  showPoster = data => {
+    this.setState({ currentImg: data });
   };
 
   render() {
-    const { users, isFormShown } = this.state;
     return (
       <>
-        <Section>
-          <UsersList
-            users={users}
-            deleteUser={this.deleteUser}
-            changeStatus={this.changeStatus}
-          />
-          {isFormShown ? (
-            <AddForm addUser={this.addUser} closeForm={this.closeForm} />
-          ) : (
-            <Button text="Add User" clickHandler={this.openForm} />
-          )}
-        </Section>
+        <MoviesGallery
+          movies={this.state.movies}
+          deleteMovie={this.deleteMovie}
+        />
+        {/* {this.currentImg && <Modal currentImg={this.currentImg} />} */}
       </>
     );
   }
