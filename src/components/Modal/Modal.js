@@ -21,8 +21,8 @@ export const ModalContent = styled.div`
   border-radius: 3px;
 `;
 
-export const StyledButton = styled.button`
+export const Button = styled.button`
   position: absolute;
-  right: 0;
-  top: 0;
+  top: 10px;
+  right: 10px;
 `;

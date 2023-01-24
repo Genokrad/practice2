@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Backdrop, ModalContent, StyledButton } from './Modal.styled';
+import { Backdrop, ModalContent, Button } from './Modal.styled';
 
-export class App extends Component {
+export class Modal extends Component {
   render() {
     const {
       currentImg: { src, alt },
@@ -10,7 +10,7 @@ export class App extends Component {
       <Backdrop>
         <ModalContent>
           <img src={src} alt={alt} />
-          <StyledButton type="button">Close</StyledButton>
+          <Button type="button">Close</Button>
         </ModalContent>
       </Backdrop>
     );
